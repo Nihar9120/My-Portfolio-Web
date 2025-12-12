@@ -28,7 +28,7 @@ pipeline{
                  // some block
                  sh '''
                  
-                 scp -o StrictHostKeyChecking=no target/My-Portfolio-webapp.war ec2-user@http://65.0.32.175:9090/home/ec2-user/apache-tomcat-9.0.111/webapps
+                 scp -o StrictHostKeyChecking=no target/My-Portfolio-webapp.war ec2-user@65.0.32.175:/home/ec2-user/apache-tomcat-9.0.111/webapps
                  
                  '''
                 }
