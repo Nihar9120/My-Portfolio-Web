@@ -1,0 +1,38 @@
+pipeline{
+    agent any
+    environment {
+        PATH = "$PATH:/opt/apache-maven-3.9.11/bin"
+    }
+    stages{
+        stage ('GetCode'){
+            steps{
+                git branch: 'main',
+                url: "https://github.com/Nihar9120/My-Portfolio-Web.git"
+            }
+        }
+        stage('Build'){
+            steps{
+                sh 'mvn clean package'
+            }
+        }
+        stage('SonarQube analysis'){
+            steps{
+                withSonarQubeEnv('Sonar-Server-9.9.4'){
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+        stage('Code deploy'){
+            steps{
+                sshagent(['ssh_agent_pipeline']) {
+                 // some block
+                 sh '''
+                 
+                 scp -o StrictHostKeyChecking=no target/My-Portfolio-webapp.war ec2-user@http://3.7.71.179:9090/home/ec2-user/apache-tomcat-9.0.111/webapps
+                 
+                 '''
+                }
+            }
+        }
+    }
+}
